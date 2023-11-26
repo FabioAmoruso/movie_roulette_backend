@@ -3,19 +3,23 @@ import express from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
 import Logging from './library/Logging';
-import movieRoutes, { route } from './routes/Movie';
+import movieRoutes from './routes/Movie';
 
 const router = express();
 
 /** Connect to Mongo */
-mongoose.connect(config.mongo.url, { retryWrites: true, writeConcern: { w: 'majority' } })
-    .then(() => {
-        Logging.info('Connected to MongoDB');
-        StartServer();
-    })
-    .catch((error) => {
-        Logging.error(error);
-    });
+mongoose.connect(config.mongo.url,
+    {
+        retryWrites: true,
+        writeConcern:
+            { w: 'majority' }
+    }
+).then(() => {
+    Logging.info('Connected to MongoDB');
+    StartServer();
+}).catch((error) => {
+    Logging.error(error);
+});
 
 /** Only start the server if Mongo Connects */
 const StartServer = () => {
@@ -55,7 +59,7 @@ const StartServer = () => {
 
     /** Error handling */
     router.use((req, res, next) => {
-        const error = new Error('not found');
+        const error = new Error('Not found');
         Logging.error(error);
 
         return res.status(404).json({ message: error.message });
